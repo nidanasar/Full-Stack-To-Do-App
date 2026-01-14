@@ -1,93 +1,105 @@
-<!-- # Backend Package - Claude Instructions
-
-## Package Overview
-Node.js/Express backend API for the hackathon-todo application.
-
-## Technology Stack
-- Node.js 18+
-- Express.js
-- TypeScript
-- Prisma ORM
-- SQLite (development)
-- JWT for authentication
-- bcrypt for password hashing
-
-## Key Directories
-```
-backend/
-├── src/
-│   ├── routes/        # API route handlers
-│   ├── controllers/   # Business logic
-│   ├── middleware/    # Express middleware
-│   ├── services/      # Data access layer
-│   ├── utils/         # Utility functions
-│   └── types/         # TypeScript types
-├── prisma/
-│   └── schema.prisma  # Database schema
-└── package.json
-```
-
-## Development Commands
-```bash
-npm run dev           # Start with hot reload
-npm run build         # Compile TypeScript
-npm run start         # Run production build
-npm run db:migrate    # Run Prisma migrations
-npm run db:studio     # Open Prisma Studio
-npm run test          # Run tests
-```
-
-## Environment Variables
-```
-DATABASE_URL=file:./dev.db
-JWT_SECRET=your-secret-key
-PORT=3001
-```
-
-## API Conventions
-- RESTful endpoints under `/api/v1`
-- JSON request/response bodies
-- Standard HTTP status codes
-- Error responses include code and message
-- Protected routes require Bearer token -->
-
-
-### `backend/CLAUDE.md`
-```markdown
 # Backend Guidelines (FastAPI + SQLModel)
 
 ## Stack
-- FastAPI, SQLModel, psycopg (async), python-jose[cryptography] for JWT
-- DATABASE_URL from .env
+- **Framework**: FastAPI with async support
+- **ORM**: SQLModel (SQLAlchemy + Pydantic)
+- **Database**: Neon PostgreSQL (asyncpg driver)
+- **Auth**: python-jose for JWT, passlib[bcrypt] for password hashing
+- **Config**: pydantic-settings for environment variables
 
-## Structure
-- main.py: App + middleware
-- models.py: SQLModel (Task, User FK)
-- crud.py: DB ops
-- routes/tasks.py: APIRouter
-- deps.py: JWT verify + get_current_user
-- db.py: engine/session
+## Project Structure
+```
+backend/
+├── main.py           # FastAPI app, CORS, lifespan, routers
+├── config.py         # Settings class (DATABASE_URL, BETTER_AUTH_SECRET)
+├── database.py       # Async engine, session factory
+├── models.py         # User, Task SQLModels
+├── schemas.py        # Pydantic request/response schemas
+├── auth.py           # password_hash, password_verify, JWT utils
+├── dependencies.py   # get_db, get_current_user
+├── exceptions.py     # Custom exceptions, error handlers
+├── routes/
+│   ├── __init__.py   # Router exports
+│   ├── auth.py       # POST /auth/register, /auth/login
+│   └── tasks.py      # Task CRUD endpoints
+├── tests/
+│   ├── conftest.py   # Async test fixtures
+│   ├── test_auth.py  # Auth endpoint tests
+│   └── test_tasks.py # Task CRUD + isolation tests
+├── pyproject.toml    # Dependencies (uv/pip)
+├── .env.example      # Environment template
+└── .gitignore
+```
 
-## Auth Middleware
-- Dependency: Verify JWT from Authorization header
-- Shared secret: BETTER_AUTH_SECRET
-- Extract user_id from token, validate path user_id == token user_id
-- pyjwt or python-jose
+## API Endpoints
 
-## API Conventions
-- Prefix /api
-- Pydantic models for req/res
-- Filter all by current_user.id
-- HTTPException for 401/403/404
+### Authentication (Public)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/register` | Register user, returns JWT |
+| POST | `/api/v1/auth/login` | Login user, returns JWT |
 
-Example Dep:
-```python
-from fastapi import Depends, HTTPException
-from jose import jwt, JWTError
+### Tasks (JWT Protected)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/tasks` | List user's tasks (filterable) |
+| POST | `/api/v1/tasks` | Create task |
+| GET | `/api/v1/tasks/{id}` | Get single task |
+| PUT | `/api/v1/tasks/{id}` | Full update |
+| PATCH | `/api/v1/tasks/{id}` | Partial update |
+| DELETE | `/api/v1/tasks/{id}` | Delete task (204) |
 
-def get_current_user(token: str = Header()) -> str:
-    try:
-        payload = jwt.decode(token.replace("Bearer ", ""), BETTER_AUTH_SECRET, algorithms=["HS256"])
-        return payload["sub"]  # user_id
-    except JWTError:
-        raise HTTPException(401)
+## Key Implementation Details
+
+### Authentication Flow
+1. JWT extracted from `Authorization: Bearer <token>` header
+2. Token validated with `BETTER_AUTH_SECRET` (shared with frontend)
+3. User ID extracted from JWT `sub` claim
+4. All task queries filtered by `user_id` from token
+
+### User Isolation
+- **Critical**: User ID NEVER comes from request body/URL
+- All task operations use `WHERE user_id = current_user.id`
+- Accessing another user's task returns 404 (not 403) to prevent enumeration
+
+### Error Response Format
+```json
+{"error": {"code": "UNAUTHORIZED", "message": "Invalid credentials"}}
+```
+
+### Status Codes
+- 200: Success
+- 201: Created
+- 204: No Content (delete)
+- 401: Unauthorized (auth errors)
+- 404: Not Found (also for wrong user's resources)
+- 409: Conflict (duplicate email)
+- 422: Validation Error
+
+## Development Commands
+```bash
+# Install dependencies
+uv sync --all-extras
+
+# Run development server
+uv run uvicorn main:app --reload --port 8000
+
+# Run tests
+uv run pytest -v
+
+# Run with coverage
+uv run pytest --cov=. --cov-report=html
+```
+
+## Environment Variables
+```env
+DATABASE_URL=postgresql+asyncpg://user:pass@host/db
+BETTER_AUTH_SECRET=shared-secret-with-frontend
+BETTER_AUTH_URL=http://localhost:3000
+ENVIRONMENT=development
+```
+
+## Testing Notes
+- Tests use SQLite in-memory database (aiosqlite)
+- Fixtures provide test users, tokens, and auth headers
+- User isolation tests verify cross-user access is blocked

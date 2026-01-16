@@ -19,12 +19,12 @@
 
 **Purpose**: Initialize FastAPI project structure and dependencies
 
-- [ ] T001 Create backend project structure per plan.md in backend/
-- [ ] T002 Create pyproject.toml with dependencies: fastapi, uvicorn, sqlmodel, asyncpg, python-jose, passlib[bcrypt], pydantic[email-validator], python-multipart in backend/pyproject.toml
-- [ ] T003 [P] Create .env.example with DATABASE_URL, BETTER_AUTH_SECRET, ENVIRONMENT in backend/.env.example
-- [ ] T004 [P] Create .gitignore for Python/backend in backend/.gitignore
+- [x] T001 Create backend project structure per plan.md in backend/
+- [x] T002 Create pyproject.toml with dependencies: fastapi, uvicorn, sqlmodel, asyncpg, python-jose, passlib[bcrypt], pydantic[email-validator], python-multipart in backend/pyproject.toml
+- [x] T003 [P] Create .env.example with DATABASE_URL, BETTER_AUTH_SECRET, ENVIRONMENT in backend/.env.example
+- [x] T004 [P] Create .gitignore for Python/backend in backend/.gitignore
 
-**Checkpoint**: Project structure ready for implementation
+**Checkpoint**: ✅ Project structure ready for implementation
 
 ---
 
@@ -34,18 +34,18 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create config.py with Settings class using pydantic-settings for DATABASE_URL, BETTER_AUTH_SECRET in backend/config.py
-- [ ] T006 Create database.py with async engine, AsyncSession factory, connection pool settings (5 pool, 10 overflow, 30s timeout) in backend/database.py
-- [ ] T007 [P] Create User SQLModel in backend/models.py per data-model.md (id, email, hashed_password, created_at)
-- [ ] T008 [P] Create Task SQLModel in backend/models.py per data-model.md (id, user_id FK, title, description, completed, timestamps)
-- [ ] T009 Create exceptions.py with ErrorResponse format and custom exception handlers (401, 404, 409, 422) in backend/exceptions.py
-- [ ] T010 [P] Create auth.py with password_hash() and password_verify() using bcrypt in backend/auth.py
-- [ ] T011 Create auth.py with create_access_token() generating JWT with sub, exp, iat claims in backend/auth.py
-- [ ] T012 Create auth.py with verify_token() validating JWT signature and expiration in backend/auth.py
-- [ ] T013 Create dependencies.py with get_db() async session dependency in backend/dependencies.py
-- [ ] T014 Create dependencies.py with get_current_user() extracting user_id from JWT sub claim in backend/dependencies.py
+- [x] T005 Create config.py with Settings class using pydantic-settings for DATABASE_URL, BETTER_AUTH_SECRET in backend/config.py
+- [x] T006 Create database.py with async engine, AsyncSession factory, connection pool settings (5 pool, 10 overflow, 30s timeout) in backend/database.py
+- [x] T007 [P] Create User SQLModel in backend/models.py per data-model.md (id, email, hashed_password, created_at)
+- [x] T008 [P] Create Task SQLModel in backend/models.py per data-model.md (id, user_id FK, title, description, completed, timestamps)
+- [x] T009 Create exceptions.py with ErrorResponse format and custom exception handlers (401, 404, 409, 422) in backend/exceptions.py
+- [x] T010 [P] Create auth.py with password_hash() and password_verify() using bcrypt in backend/auth.py
+- [x] T011 Create auth.py with create_access_token() generating JWT with sub, exp, iat claims in backend/auth.py
+- [x] T012 Create auth.py with verify_token() validating JWT signature and expiration in backend/auth.py
+- [x] T013 Create dependencies.py with get_db() async session dependency in backend/dependencies.py
+- [x] T014 Create dependencies.py with get_current_user() extracting user_id from JWT sub claim in backend/dependencies.py
 
-**Checkpoint**: Foundation ready - auth and task story implementation can begin
+**Checkpoint**: ✅ Foundation ready - auth and task story implementation can begin
 
 ---
 
@@ -57,20 +57,20 @@
 
 ### Schemas for US5
 
-- [ ] T015 [P] [US5] Create UserCreate schema (email: EmailStr, password: min 8 chars) in backend/schemas.py
-- [ ] T016 [P] [US5] Create UserResponse schema (id, email, created_at) in backend/schemas.py
-- [ ] T017 [P] [US5] Create AuthResponse schema (user: UserResponse, token: str) in backend/schemas.py
-- [ ] T018 [P] [US5] Create LoginRequest schema (email, password) in backend/schemas.py
+- [x] T015 [P] [US5] Create UserCreate schema (email: EmailStr, password: min 8 chars) in backend/schemas.py
+- [x] T016 [P] [US5] Create UserResponse schema (id, email, created_at) in backend/schemas.py
+- [x] T017 [P] [US5] Create AuthResponse schema (user: UserResponse, token: str) in backend/schemas.py
+- [x] T018 [P] [US5] Create LoginRequest schema (email, password) in backend/schemas.py
 
 ### Implementation for US5
 
-- [ ] T019 [US5] Create routes/__init__.py with router imports in backend/routes/__init__.py
-- [ ] T020 [US5] Implement POST /auth/register - validate email/password, hash password, create user, return JWT in backend/routes/auth.py
-- [ ] T021 [US5] Implement POST /auth/login - find user by email, verify password hash, return JWT in backend/routes/auth.py
-- [ ] T022 [US5] Add 409 Conflict error for duplicate email registration in backend/routes/auth.py
-- [ ] T023 [US5] Add 401 Unauthorized with generic "Invalid credentials" for wrong password in backend/routes/auth.py
+- [x] T019 [US5] Create routes/__init__.py with router imports in backend/routes/__init__.py
+- [x] T020 [US5] Implement POST /auth/register - validate email/password, hash password, create user, return JWT in backend/routes/auth.py
+- [x] T021 [US5] Implement POST /auth/login - find user by email, verify password hash, return JWT in backend/routes/auth.py
+- [x] T022 [US5] Add 409 Conflict error for duplicate email registration in backend/routes/auth.py
+- [x] T023 [US5] Add 401 Unauthorized with generic "Invalid credentials" for wrong password in backend/routes/auth.py
 
-**Checkpoint**: Users can register and login - JWT available for task operations
+**Checkpoint**: ✅ Users can register and login - JWT available for task operations
 
 ---
 
@@ -82,17 +82,17 @@
 
 ### Schemas for US1
 
-- [ ] T024 [P] [US1] Create TaskCreate schema (title: 1-500 chars, description: optional max 5000) in backend/schemas.py
-- [ ] T025 [P] [US1] Create TaskResponse schema (id, user_id, title, description, completed, timestamps) in backend/schemas.py
+- [x] T024 [P] [US1] Create TaskCreate schema (title: 1-500 chars, description: optional max 5000) in backend/schemas.py
+- [x] T025 [P] [US1] Create TaskResponse schema (id, user_id, title, description, completed, timestamps) in backend/schemas.py
 
 ### Implementation for US1
 
-- [ ] T026 [US1] Implement POST /api/v1/tasks - create task with user_id from JWT sub claim in backend/routes/tasks.py
-- [ ] T027 [US1] Add JWT authentication dependency to POST /tasks endpoint in backend/routes/tasks.py
-- [ ] T028 [US1] Add 422 validation for empty/invalid title in backend/routes/tasks.py
-- [ ] T029 [US1] Add 401 Unauthorized for missing/invalid JWT in backend/routes/tasks.py
+- [x] T026 [US1] Implement POST /api/v1/tasks - create task with user_id from JWT sub claim in backend/routes/tasks.py
+- [x] T027 [US1] Add JWT authentication dependency to POST /tasks endpoint in backend/routes/tasks.py
+- [x] T028 [US1] Add 422 validation for empty/invalid title in backend/routes/tasks.py
+- [x] T029 [US1] Add 401 Unauthorized for missing/invalid JWT in backend/routes/tasks.py
 
-**Checkpoint**: Authenticated users can create tasks - US1 independently testable
+**Checkpoint**: ✅ Authenticated users can create tasks - US1 independently testable
 
 ---
 
@@ -104,16 +104,16 @@
 
 ### Schemas for US2
 
-- [ ] T030 [P] [US2] Create TaskListResponse schema (tasks: list[TaskResponse]) in backend/schemas.py
+- [x] T030 [P] [US2] Create TaskListResponse schema (tasks: list[TaskResponse]) in backend/schemas.py
 
 ### Implementation for US2
 
-- [ ] T031 [US2] Implement GET /api/v1/tasks - list tasks filtered by user_id from JWT in backend/routes/tasks.py
-- [ ] T032 [US2] Add optional completed query parameter filter in backend/routes/tasks.py
-- [ ] T033 [US2] Add optional sort and order query parameters in backend/routes/tasks.py
-- [ ] T034 [US2] Enforce user isolation - WHERE user_id = current_user.id on all queries in backend/routes/tasks.py
+- [x] T031 [US2] Implement GET /api/v1/tasks - list tasks filtered by user_id from JWT in backend/routes/tasks.py
+- [x] T032 [US2] Add optional completed query parameter filter in backend/routes/tasks.py
+- [x] T033 [US2] Add optional sort and order query parameters in backend/routes/tasks.py
+- [x] T034 [US2] Enforce user isolation - WHERE user_id = current_user.id on all queries in backend/routes/tasks.py
 
-**Checkpoint**: Users can view their task list - US2 independently testable
+**Checkpoint**: ✅ Users can view their task list - US2 independently testable
 
 ---
 
@@ -125,18 +125,18 @@
 
 ### Schemas for US3
 
-- [ ] T035 [P] [US3] Create TaskUpdate schema (title, description, completed - all required) in backend/schemas.py
-- [ ] T036 [P] [US3] Create TaskPatch schema (title, description, completed - all optional) in backend/schemas.py
+- [x] T035 [P] [US3] Create TaskUpdate schema (title, description, completed - all required) in backend/schemas.py
+- [x] T036 [P] [US3] Create TaskPatch schema (title, description, completed - all optional) in backend/schemas.py
 
 ### Implementation for US3
 
-- [ ] T037 [US3] Implement GET /api/v1/tasks/{task_id} - get single task with ownership check in backend/routes/tasks.py
-- [ ] T038 [US3] Implement PUT /api/v1/tasks/{task_id} - full update with ownership check in backend/routes/tasks.py
-- [ ] T039 [US3] Implement PATCH /api/v1/tasks/{task_id} - partial update with ownership check in backend/routes/tasks.py
-- [ ] T040 [US3] Return 404 Not Found when task doesn't exist OR belongs to different user in backend/routes/tasks.py
-- [ ] T041 [US3] Auto-update updated_at timestamp on modifications in backend/routes/tasks.py
+- [x] T037 [US3] Implement GET /api/v1/tasks/{task_id} - get single task with ownership check in backend/routes/tasks.py
+- [x] T038 [US3] Implement PUT /api/v1/tasks/{task_id} - full update with ownership check in backend/routes/tasks.py
+- [x] T039 [US3] Implement PATCH /api/v1/tasks/{task_id} - partial update with ownership check in backend/routes/tasks.py
+- [x] T040 [US3] Return 404 Not Found when task doesn't exist OR belongs to different user in backend/routes/tasks.py
+- [x] T041 [US3] Auto-update updated_at timestamp on modifications in backend/routes/tasks.py
 
-**Checkpoint**: Users can update their tasks - US3 independently testable
+**Checkpoint**: ✅ Users can update their tasks - US3 independently testable
 
 ---
 
@@ -148,11 +148,11 @@
 
 ### Implementation for US4
 
-- [ ] T042 [US4] Implement DELETE /api/v1/tasks/{task_id} - delete with ownership check in backend/routes/tasks.py
-- [ ] T043 [US4] Return 204 No Content on successful deletion in backend/routes/tasks.py
-- [ ] T044 [US4] Return 404 Not Found when task doesn't exist OR belongs to different user in backend/routes/tasks.py
+- [x] T042 [US4] Implement DELETE /api/v1/tasks/{task_id} - delete with ownership check in backend/routes/tasks.py
+- [x] T043 [US4] Return 204 No Content on successful deletion in backend/routes/tasks.py
+- [x] T044 [US4] Return 404 Not Found when task doesn't exist OR belongs to different user in backend/routes/tasks.py
 
-**Checkpoint**: Users can delete their tasks - US4 independently testable
+**Checkpoint**: ✅ Users can delete their tasks - US4 independently testable
 
 ---
 
@@ -160,15 +160,15 @@
 
 **Purpose**: Wire up FastAPI app with all components
 
-- [ ] T045 Create main.py with FastAPI app instance, title, description, version in backend/main.py
-- [ ] T046 Add CORS middleware configuration allowing frontend origin in backend/main.py
-- [ ] T047 Register auth router at /api/v1/auth prefix in backend/main.py
-- [ ] T048 Register tasks router at /api/v1/tasks prefix in backend/main.py
-- [ ] T049 Register exception handlers from exceptions.py in backend/main.py
-- [ ] T050 Add startup validation for DATABASE_URL and BETTER_AUTH_SECRET in backend/main.py
-- [ ] T051 [P] Create routes/__init__.py exporting auth_router and tasks_router in backend/routes/__init__.py
+- [x] T045 Create main.py with FastAPI app instance, title, description, version in backend/main.py
+- [x] T046 Add CORS middleware configuration allowing frontend origin in backend/main.py
+- [x] T047 Register auth router at /api/v1/auth prefix in backend/main.py
+- [x] T048 Register tasks router at /api/v1/tasks prefix in backend/main.py
+- [x] T049 Register exception handlers from exceptions.py in backend/main.py
+- [x] T050 Add startup validation for DATABASE_URL and BETTER_AUTH_SECRET in backend/main.py
+- [x] T051 [P] Create routes/__init__.py exporting auth_router and tasks_router in backend/routes/__init__.py
 
-**Checkpoint**: Full API assembled and runnable with `uvicorn main:app --reload`
+**Checkpoint**: ✅ Full API assembled and runnable with `uvicorn main:app --reload`
 
 ---
 
@@ -176,16 +176,16 @@
 
 **Purpose**: Final verification and cross-cutting concerns
 
-- [ ] T052 [P] Create tests/conftest.py with async test fixtures and test database setup in backend/tests/conftest.py
-- [ ] T053 [P] Create tests/test_auth.py with registration, login, JWT validation tests in backend/tests/test_auth.py
-- [ ] T054 [P] Create tests/test_tasks.py with CRUD tests and user isolation verification in backend/tests/test_tasks.py
-- [ ] T055 Verify all acceptance scenarios from spec.md pass
-- [ ] T056 Verify multi-user isolation - User A cannot see User B's tasks
-- [ ] T057 Verify 401/404 behavior matches spec (no 403 exposure)
-- [ ] T058 Run quickstart.md validation with curl commands
-- [ ] T059 Update backend/CLAUDE.md with implementation notes if needed
+- [x] T052 [P] Create tests/conftest.py with async test fixtures and test database setup in backend/tests/conftest.py
+- [x] T053 [P] Create tests/test_auth.py with registration, login, JWT validation tests in backend/tests/test_auth.py
+- [x] T054 [P] Create tests/test_tasks.py with CRUD tests and user isolation verification in backend/tests/test_tasks.py
+- [x] T055 Verify all acceptance scenarios from spec.md pass
+- [x] T056 Verify multi-user isolation - User A cannot see User B's tasks
+- [x] T057 Verify 401/404 behavior matches spec (no 403 exposure)
+- [x] T058 Run quickstart.md validation with curl commands
+- [x] T059 Update backend/CLAUDE.md with implementation notes if needed
 
-**Checkpoint**: All tasks complete, API verified against specification
+**Checkpoint**: ✅ All tasks complete, API verified against specification
 
 ---
 
@@ -254,21 +254,21 @@ US3 and US4 can proceed in parallel
 
 ### MVP First (US5 + US1 + US2)
 
-1. Complete Phase 1: Setup
-2. Complete Phase 2: Foundational
-3. Complete Phase 3: US5 (Auth) - **Users can register/login**
-4. Complete Phase 4: US1 (Create) - **Users can create tasks**
-5. Complete Phase 5: US2 (List) - **Users can view tasks**
-6. **STOP and VALIDATE**: Test core functionality
+1. Complete Phase 1: Setup ✅
+2. Complete Phase 2: Foundational ✅
+3. Complete Phase 3: US5 (Auth) - **Users can register/login** ✅
+4. Complete Phase 4: US1 (Create) - **Users can create tasks** ✅
+5. Complete Phase 5: US2 (List) - **Users can view tasks** ✅
+6. **STOP and VALIDATE**: Test core functionality ✅
 7. Deploy MVP if needed
 
 ### Full Implementation
 
 Continue with:
-8. Complete Phase 6: US3 (Update)
-9. Complete Phase 7: US4 (Delete)
-10. Complete Phase 8: App Assembly
-11. Complete Phase 9: Polish & Verification
+8. Complete Phase 6: US3 (Update) ✅
+9. Complete Phase 7: US4 (Delete) ✅
+10. Complete Phase 8: App Assembly ✅
+11. Complete Phase 9: Polish & Verification ✅
 
 ### Single Developer Sequence
 
@@ -280,18 +280,18 @@ T001-T004 (Setup) → T005-T014 (Foundation) → T015-T023 (US5) → T024-T029 (
 
 ## Task Summary
 
-| Phase | Tasks | Parallel Opportunities |
-|-------|-------|----------------------|
-| Phase 1: Setup | 4 | 2 |
-| Phase 2: Foundational | 10 | 4 |
-| Phase 3: US5 Auth | 9 | 4 |
-| Phase 4: US1 Create | 6 | 2 |
-| Phase 5: US2 List | 5 | 1 |
-| Phase 6: US3 Update | 7 | 2 |
-| Phase 7: US4 Delete | 3 | 0 |
-| Phase 8: Assembly | 7 | 1 |
-| Phase 9: Polish | 8 | 3 |
-| **Total** | **59** | **19** |
+| Phase | Tasks | Parallel Opportunities | Status |
+|-------|-------|----------------------|--------|
+| Phase 1: Setup | 4 | 2 | ✅ Complete |
+| Phase 2: Foundational | 10 | 4 | ✅ Complete |
+| Phase 3: US5 Auth | 9 | 4 | ✅ Complete |
+| Phase 4: US1 Create | 6 | 2 | ✅ Complete |
+| Phase 5: US2 List | 5 | 1 | ✅ Complete |
+| Phase 6: US3 Update | 7 | 2 | ✅ Complete |
+| Phase 7: US4 Delete | 3 | 0 | ✅ Complete |
+| Phase 8: Assembly | 7 | 1 | ✅ Complete |
+| Phase 9: Polish | 8 | 3 | ✅ Complete |
+| **Total** | **59** | **19** | **✅ ALL COMPLETE** |
 
 ---
 
@@ -303,3 +303,11 @@ T001-T004 (Setup) → T005-T014 (Foundation) → T015-T023 (US5) → T024-T029 (
 - Use async/await for all database operations
 - Commit after each task or logical group
 - Test each user story independently before proceeding
+
+---
+
+## Implementation Complete
+
+**Date Completed**: 2026-01-15
+**Server Running**: http://localhost:8000
+**API Docs**: http://localhost:8000/docs

@@ -1,14 +1,14 @@
-import { authApi } from './api'
+import { authApi, setToken, clearToken, getToken } from './api'
 import type { LoginRequest, RegisterRequest, User } from './types'
 
 /**
  * Auth module for session management
- * Uses httpOnly cookies managed by the backend
+ * Uses JWT token stored in localStorage
  */
 
 /**
  * Sign in with email and password
- * On success, backend sets httpOnly cookie
+ * On success, stores JWT token
  */
 export async function signIn(credentials: LoginRequest): Promise<{ user?: User; error?: string }> {
   const response = await authApi.login(credentials)
@@ -17,12 +17,16 @@ export async function signIn(credentials: LoginRequest): Promise<{ user?: User; 
     return { error: response.error }
   }
 
+  if (response.data?.token) {
+    setToken(response.data.token)
+  }
+
   return { user: response.data?.user }
 }
 
 /**
  * Register new user
- * On success, backend sets httpOnly cookie
+ * On success, stores JWT token
  */
 export async function signUp(data: RegisterRequest): Promise<{ user?: User; error?: string }> {
   const response = await authApi.register(data)
@@ -31,20 +35,19 @@ export async function signUp(data: RegisterRequest): Promise<{ user?: User; erro
     return { error: response.error }
   }
 
+  if (response.data?.token) {
+    setToken(response.data.token)
+  }
+
   return { user: response.data?.user }
 }
 
 /**
  * Sign out current user
- * Backend clears httpOnly cookie
+ * Clears stored JWT token
  */
 export async function signOut(): Promise<{ error?: string }> {
-  const response = await authApi.logout()
-
-  if (response.error) {
-    return { error: response.error }
-  }
-
+  clearToken()
   return {}
 }
 
@@ -53,6 +56,11 @@ export async function signOut(): Promise<{ error?: string }> {
  * Checks if user is authenticated via /auth/me endpoint
  */
 export async function getSession(): Promise<{ user?: User; error?: string }> {
+  const token = getToken()
+  if (!token) {
+    return { error: 'No token' }
+  }
+
   const response = await authApi.me()
 
   if (response.error) {
@@ -64,9 +72,8 @@ export async function getSession(): Promise<{ user?: User; error?: string }> {
 
 /**
  * Check if user is authenticated
- * Returns true if session exists
+ * Returns true if token exists
  */
-export async function isAuthenticated(): Promise<boolean> {
-  const { user } = await getSession()
-  return !!user
+export function isAuthenticated(): boolean {
+  return !!getToken()
 }

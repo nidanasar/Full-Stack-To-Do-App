@@ -9,8 +9,8 @@ from sqlmodel import Field, SQLModel
 
 
 def utc_now() -> datetime:
-    """Return current UTC timestamp."""
-    return datetime.now(timezone.utc)
+    """Return current UTC timestamp (naive, for database compatibility)."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class User(SQLModel, table=True):

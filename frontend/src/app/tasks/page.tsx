@@ -1,52 +1,63 @@
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { TaskList } from '@/components/tasks/TaskList'
+import { TaskListSkeleton } from '@/components/ui/Skeleton'
+import { tasksApi } from '@/lib/api'
+import { isAuthenticated } from '@/lib/auth'
 import type { Task } from '@/lib/types'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
+export default function TasksPage() {
+  const router = useRouter()
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-async function getTasks(): Promise<{ tasks: Task[]; needsAuth: boolean }> {
-  const cookieStore = await cookies()
-  const allCookies = cookieStore.getAll()
-  const cookieHeader = allCookies
-    .map(c => `${c.name}=${c.value}`)
-    .join('; ')
+  useEffect(() => {
+    // Check auth and fetch tasks
+    async function loadTasks() {
+      if (!isAuthenticated()) {
+        router.push('/login')
+        return
+      }
 
-  try {
-    const response = await fetch(`${API_BASE}/tasks`, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': cookieHeader,
-      },
-      cache: 'no-store',
-    })
+      const response = await tasksApi.list()
 
-    if (response.status === 401) {
-      return { tasks: [], needsAuth: true }
+      if (response.error) {
+        if (response.error.includes('401')) {
+          router.push('/login')
+          return
+        }
+        setError(response.error)
+      } else if (response.data) {
+        setTasks(response.data)
+      }
+
+      setLoading(false)
     }
 
-    if (!response.ok) {
-      return { tasks: [], needsAuth: false }
-    }
+    loadTasks()
+  }, [router])
 
-    const tasks = await response.json()
-    return { tasks, needsAuth: false }
-  } catch (error) {
-    console.error('Failed to fetch tasks:', error)
-    return { tasks: [], needsAuth: false }
+  if (loading) {
+    return (
+      <main className="max-w-2xl mx-auto px-4 py-8">
+        <div className="h-8 w-32 bg-gray-200 animate-pulse rounded mb-6" />
+        <TaskListSkeleton />
+      </main>
+    )
   }
-}
 
-export const metadata = {
-  title: 'My Tasks - Todo App',
-  description: 'Manage your tasks',
-}
-
-export default async function TasksPage() {
-  const { tasks, needsAuth } = await getTasks()
-
-  if (needsAuth) {
-    redirect('/login')
+  if (error) {
+    return (
+      <main className="max-w-2xl mx-auto px-4 py-8">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">My Tasks</h1>
+        <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+          <p className="text-red-600">{error}</p>
+        </div>
+      </main>
+    )
   }
 
   return (

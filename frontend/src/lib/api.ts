@@ -11,22 +11,55 @@ import type {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1'
 
+// Token storage key
+const TOKEN_KEY = 'auth_token'
+
+/**
+ * Get stored auth token
+ */
+export function getToken(): string | null {
+  if (typeof window === 'undefined') return null
+  return localStorage.getItem(TOKEN_KEY)
+}
+
+/**
+ * Store auth token
+ */
+export function setToken(token: string): void {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(TOKEN_KEY, token)
+}
+
+/**
+ * Clear auth token
+ */
+export function clearToken(): void {
+  if (typeof window === 'undefined') return
+  localStorage.removeItem(TOKEN_KEY)
+}
+
 /**
  * Fetch wrapper with authentication and error handling
- * Uses credentials: 'include' for httpOnly cookie auth
+ * Uses JWT token in Authorization header
  */
 async function fetchWithAuth<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<ApiResponse<T>> {
   try {
+    const token = getToken()
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      ...(options?.headers as Record<string, string>),
+    }
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
     const response = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        ...options?.headers,
-      },
+      headers,
     })
 
     if (!response.ok) {
@@ -94,12 +127,21 @@ export const authApi = {
 // Tasks API
 // ============================================
 
+interface TaskListResponse {
+  tasks: Task[]
+}
+
 export const tasksApi = {
   /**
    * Get all tasks for the current user
    */
-  list: (): Promise<ApiResponse<Task[]>> =>
-    fetchWithAuth<Task[]>('/tasks'),
+  list: async (): Promise<ApiResponse<Task[]>> => {
+    const response = await fetchWithAuth<TaskListResponse>('/tasks')
+    if (response.error) {
+      return { error: response.error }
+    }
+    return { data: response.data?.tasks || [] }
+  },
 
   /**
    * Get a single task by ID

@@ -49,8 +49,7 @@ export interface RegisterRequest {
 
 // Auth response from login/register
 export interface AuthResponse {
-  access_token: string
-  token_type: string
+  token: string
   user: User
 }
 

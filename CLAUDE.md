@@ -79,3 +79,6 @@ Always reference specs with @specs/path.md before implementing.
 - Both: `docker-compose up`
 - Frontend only: `cd frontend && npm run dev`
 - Backend only: `cd backend && uv run uvicorn main:app --reload --port 8000`
+
+## Recent Changes
+- 001-backend-api: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]

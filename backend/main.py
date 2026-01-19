@@ -111,7 +111,6 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         settings.better_auth_url,
-        "https://fullstack-todo-app.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

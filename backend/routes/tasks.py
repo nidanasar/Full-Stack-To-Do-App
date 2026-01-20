@@ -233,7 +233,7 @@ async def update_task(
     task.title = data.title
     task.description = data.description
     task.completed = data.completed
-    task.updated_at = datetime.now(timezone.utc)
+    task.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
     await db.flush()
     await db.refresh(task)
@@ -287,7 +287,7 @@ async def patch_task(
 
     # Auto-update timestamp if any field changed
     if has_changes:
-        task.updated_at = datetime.now(timezone.utc)
+        task.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
     await db.flush()
     await db.refresh(task)
